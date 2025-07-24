@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 500px;
+            max-width: 90%;
+            margin: 0 auto 20px auto;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-2px);
+        }
+
+        label {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            font-size: 1em;
+            border-radius: 12px;
+            border: 2px solid #e0e6ed;
+            margin-bottom: 20px;
+            resize: vertical;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .manage-section {
+            display: none;
+            width: 100%;
+        }
+
+        .manage-section h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .current-recipients {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(79, 172, 254, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .current-recipients h3 {
+            color: #4facfe;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .recipient-list {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(224, 230, 237, 0.5);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .recipient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 100%);
+            border-radius: 10px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.95em;
+            border: 1px solid rgba(79, 172, 254, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .recipient-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.2);
+        }
+
+        .recipient-email {
+            flex-grow: 1;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .quick-remove {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(238, 90, 82, 0.3);
+        }
+
+        .quick-remove:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(238, 90, 82, 0.4);
+        }
+
+        .no-recipients {
+            color: #e74c3c;
+            font-style: italic;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+            border-radius: 12px;
+            border: 2px dashed #ff6b6b;
+            font-size: 1.1em;
+        }
+
+        .form-section {
+            padding: 30px;
+        }
+
+        .form-section h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .form-field {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 15px 18px;
+            font-size: 1em;
+            border-radius: 10px;
+            border: 2px solid #e0e6ed;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(86, 171, 47, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(238, 90, 82, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .flash {
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            border-left: 4px solid;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .flash.success {
+            border-left-color: #56ab2f;
+            color: #2d5016;
+        }
+
+        .flash.error {
+            border-left-color: #ff6b6b;
+            color: #721c24;
+        }
+
+        .divider {
+            height: 3px;
+            background: linear-gradient(to right, transparent, #4facfe, transparent);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+
+        .stats {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 0 auto 25px auto;
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 500px;
+            max-width: 90%;
+        }
+
+        .stats h4 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .stats .count {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tip-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #2c3e50;
+            font-size: 0.95em;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .form-field {
+                min-width: 100%;
+            }
+            
+            .recipient-item {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div id="errorMessenger" class="container">
+            <h1>⚠️ Error Messenger</h1>
+            <form method="POST" action="/send-alert">
+                <label for="error">Enter Error Message:</label>
+                <textarea id="error" name="error" placeholder="Type error message here..." required></textarea>
+                <button type="submit">Send Alert</button>
+            </form>
+            <button type="button" class="btn btn-secondary" onclick="toggleSection('manageRecipients')" style="margin-top: 15px;">Manage Recipients</button>
+        </div>
+
+        <div id="manageRecipients" class="manage-section">
+            <h1>📧 Manage Recipients</h1>
+
+            <div class="stats">
+                <h4>Current Recipients</h4>
+                <div class="count">{{ recipients|length }}</div>
+            </div>
+
+            <div class="container">
+                <div class="current-recipients">
+                    <h3>👥 Current Recipients</h3>
+                    {% if recipients %}
+                        <div class="recipient-list">
+                            {% for email in recipients %}
+                                <div class="recipient-item">
+                                    <span class="recipient-email">{{ email }}</span>
+                                    <form method="POST" action="/update-clients" style="display: inline;">
+                                        <input type="hidden" name="remove_email" value="{{ email }}">
+                                        <button type="submit" class="quick-remove" 
+                                                onclick="return confirm('Remove {{ email }}?')">
+                                            ✕ Remove
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="no-recipients">
+                            ⚠️ No recipients configured yet. Add some email addresses below to get started!
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="container">
+                <div class="form-section">
+                    <h3>✏️ Add New Recipients</h3>
+                    
+                    <form method="POST" action="/update-clients">
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="new_email">➕ Add New Email:</label>
+                                    <input type="email" 
+                                           name="new_email" 
+                                           id="new_email" 
+                                           placeholder="example@company.com"
+                                           autocomplete="email">
+                                </div>
+                                <button type="submit" class="btn btn-success">Add Email</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" class="btn btn-primary" onclick="toggleSection('errorMessenger')">🏠 Back to Error Messenger</button>
+                {% if recipients %}
+                    <a href="/delete-clients" class="btn btn-danger" 
+                       onclick="return confirm('Are you sure you want to delete ALL recipients? This cannot be undone!')">
+                       🗑️ Clear All Recipients
+                    </a>
+                {% endif %}
+            </div>
+
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(sectionIdToShow) {
+            const errorMessenger = document.getElementById('errorMessenger');
+            const manageRecipients = document.getElementById('manageRecipients');
+
+            if (sectionIdToShow === 'errorMessenger') {
+                errorMessenger.style.display = 'block';
+                manageRecipients.style.display = 'none';
+            } else if (sectionIdToShow === 'manageRecipients') {
+                errorMessenger.style.display = 'none';
+                manageRecipients.style.display = 'block';
+            }
+        }
+
+        // Check for flash messages on page load and show the appropriate section
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const flashMessages = document.querySelectorAll('.flash');
+            let shouldShowManageSection = false;
+            flashMessages.forEach(msg => {
+                if (msg.textContent.includes("recipient") || msg.textContent.includes("client")) {
+                    shouldShowManageSection = true;
+                }
+            });
+
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('edit-clients') || shouldShowManageSection) {
+                toggleSection('manageRecipients');
+            } else {
+                toggleSection('errorMessenger');
+            }
+        });
+    </script>
+</body>
+</html>
